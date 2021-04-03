@@ -24,9 +24,13 @@ module.exports = {
         today = dd + '/' + mm + '/' + yyyy + ' ' + hh + ':' + MM + ':' + ss + '.' + mmm
         return today;
     },
-    tryConnection: async function(page, url, selector, tentativas){ 
+    tryConnection: async function(page, url, selector, tentativas){    
+
         while(tentativas > 0){
             try {
+                shell.exec('sh /home/georgevepo/Desktop/hma vpn/hma-connect.sh');
+                await new Promise(resolve => setTimeout(resolve, 30000));
+                
                 await page.goto(url, {
                     timeout: 20000
                 });
@@ -43,35 +47,6 @@ module.exports = {
                 }                    
             }                            
         }            
-    },
-    connectToVPN: async function(page){   
-        shell.exec('sh /home/mercantile/servico/Util/hma-scheduled-runner.sh');
-        await new Promise(resolve => setTimeout(resolve, 30000));
-        var tentativas = 0;
-        while(tentativas <= 5){
-            try {
-                await page.goto('https://www.google.com/', {
-                    timeout: 20000
-                });
-    
-                await page.waitForSelector('#hplogo', {
-                    timeout: 20000
-                })
-
-                break;
-    
-            } catch (e) {  
-                tentativas += 1;      
-                if(tentativas >= 5){
-                    e.message = 'Não conseguiu conectar a internet.';
-                    page.close();
-                    throw e;
-                }
-                shell.exec('sh /home/mercantile/servico/Util/hma-scheduled-runner.sh');
-                await new Promise(resolve => setTimeout(resolve, 30000));
-            }               
-        } 
-     
     },
     disconnectToVPN: async function(){
         //shell.exec('echo 9424 | sudo -S killall openvpn');

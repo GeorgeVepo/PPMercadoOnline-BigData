@@ -115,7 +115,7 @@ async function obterTextoReclamacoes() {
 
 async function acessarSite(page, url, selector) {   
     try{ 
-            ageReclamacao= await browser.newPage();
+            pageReclamacao= await browser.newPage();
             urlPesquisa = _site.format(busca, pagina);
 
             await util.sleep(Math.floor(Math.random() * 3000) + 1000);

@@ -4,7 +4,7 @@ var __dirname = "C://servico";
 var fs = require("fs");
 var util = require('./Util/util.js');
 //var service = require("os-service");
-var reclameAqui = require('./ReclameAqui/Principal/principal.js');
+var reclameAqui = require('./ReclameAqui/obterReclamacoes.js');
 const killChrome = require('kill-chrome');
 var cargaInicial = true;
 
