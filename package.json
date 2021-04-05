@@ -2,10 +2,10 @@
   "name": "PPMercadoOnline",
   "version": "1.0.0",
   "description": "",
-  "main": "Server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +13,7 @@
     "kill-chrome": "^2.2.0",
     "mongodb": "^3.6.5",
     "node-rest-client": "^3.1.0",
-    "puppeteer": "^1.11.0"
+    "puppeteer": "^1.11.0",
+    "shelljs": "^0.8.4"
   }
 }
