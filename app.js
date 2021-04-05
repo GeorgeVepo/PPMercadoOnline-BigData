@@ -1,5 +1,4 @@
-const path = require('path');
-var __dirname = "C://servico";
+var __dirname = "/home/georgevepo/Desktop/PPMercadoOnline-BigData-main";
 var fs = require("fs");
 var util = require('./util/util.js');
 var reclameAqui = require('./webscrapper/reclameaqui.js');
