@@ -1,8 +1,6 @@
 var __dirname = "";
-var fs = require("fs");
 var _puppeteer = require('puppeteer');
 var _util = require('../util/util.js');
-String.prototype.format = util.format;
 var _pagina = 1;
 var _today = "";
 var _busca = "Supermercado";
@@ -11,6 +9,8 @@ var _browser = {};
 var _listaReclamacoes = [];
 var _pageReclamacao = {};
 var _site = "";
+var fs = require("fs");
+String.prototype.format = _util.format;
 
 //module exports para oder usar em outras partes
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
         _page = await _browser.newPage();        
     
         try {    
-            acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
+            await acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
     
             if(cargaInicial){
                 cargaInicialObterReclamacao();
@@ -37,7 +37,7 @@ module.exports = {
              
         } catch (e) {
             _today = _util.getDate();
-            fs.appendFile(__dirname + '//Log.txt', "\r\n" + _today + "\r\n" + e.message + "\r\n", function (err) {});
+            fs.appendFile(__dirname + '//log.txt', "\r\n" + _today + "\r\n" + e.message + "\r\n", function (err) {});
             return "raspagem indisponivel";
         }
     
@@ -54,17 +54,17 @@ module.exports = {
 
 async function cargaInicialObterReclamacao() {
     
-    fs.appendFile(__dirname + '//Log.txt', "cargaInicialObterReclamacao", function (err) {});
+    fs.appendFile(__dirname + '//log.txt', "cargaInicialObterReclamacao", function (err) {});
     var urlAtual = _page.url();
-    var re = /pagina=(\d+)/g;
-    var myArray = urlAtual.match(re);
+    var re = /pagina=(\d+)/;
+    var myArray = re.exec(urlAtual);
 
     while (myArray[1] == _pagina){
         myArray = urlAtual.match(re);
         
         obterTextoReclamacoes();
         _pagina++
-        acessarSite(_page, _site.format(_busca, _pagina),".complain-list > li")
+        await acessarSite(_page, _site.format(_busca, _pagina),".complain-list > li")
     } 
 }      
 
@@ -83,7 +83,7 @@ async function obterTextoReclamacoes() {
         _pageReclamacao = await _browser.newPage();  
         urlReclamacao = await _listaReclamacoes[i].$eval('a', el => el.href);
 
-        acessarSite(_pageReclamacao, urlReclamacao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
+        await acessarSite(_pageReclamacao, urlReclamacao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
 
         try{
         
@@ -102,7 +102,7 @@ async function obterTextoReclamacoes() {
 
         } catch (e) {
                 _today = _util.getDate();
-                fs.appendFile(__dirname + '//Log.txt', "\r\n" + _today + "\r\n" + "erro no método obterTextoReclamacoes. URL: " + urlReclamacao + "\r\n" + e.message + "\r\n", function (err) {});
+                fs.appendFile(__dirname + '//log.txt', "\r\n" + _today + "\r\n" + "erro no método obterTextoReclamacoes. URL: " + urlReclamacao + "\r\n" + e.message + "\r\n", function (err) {});
     
                 _pageReclamacao.close();
                 return "raspagem indisponivel";
@@ -115,15 +115,13 @@ async function obterTextoReclamacoes() {
 
 async function acessarSite(page, site, selector) {   
     try{ 
-        fs.appendFile(__dirname + '//Log.txt', "acessarSite", function (err) {});
-
             await _util.sleep(Math.floor(Math.random() * 3000) + 1000);
     
             await _util.tryConnection(page, site, selector, 3);
 
     } catch (e) {
             _today = _util.getDate();
-            fs.appendFile(__dirname + '//Log.txt', "\r\n" + _today + "\r\n" + "erro no método acessarSite. URL: " + site + "\r\n" + e.message + "\r\n", function (err) {});
+            fs.appendFile(__dirname + '//log.txt', "\r\n" + _today + "\r\n" + "erro no método acessarSite. URL: " + site + "\r\n" + e.message + "\r\n", function (err) {});
 
             page.close();
             throw e;
