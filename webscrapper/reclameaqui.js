@@ -1,14 +1,13 @@
 var __dirname = "";
-var puppeteer = require('puppeteer');
-var util = require('../util/util.js');
-var pagina = 1;
-var busca = "Supermercado";
-var page = {};
-var browser = {};
-var listaReclamacoes = [];
-var pageReclamacao = {};
+var _puppeteer = require('puppeteer');
+var _util = require('../util/util.js');
+var _pagina = 1;
+var _busca = "Supermercado";
+var _page = {};
+var _browser = {};
+var _listaReclamacoes = [];
+var _pageReclamacao = {};
 var _site = "";
-var urlPesquisa = "";
 
 //module exports para oder usar em outras partes
 module.exports = {
@@ -16,15 +15,15 @@ module.exports = {
         __dirname = dirname;
         _site = site;
         
-        browser = await puppeteer.launch({
+        _browser = await _puppeteer.launch({
             headless: false
         });  
     
-        page = await browser.newPage();
+        _page = await _browser.newPage();        
     
         try {    
 
-            acessarSite(page, urlPesquisa, ".complain-list > li");
+            acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
     
             if(cargaInicial){
                 cargaInicialObterReclamacao();
@@ -34,17 +33,15 @@ module.exports = {
             }                    
              
         } catch (e) {
-            today = util.getDate();
+            today = _util.getDate();
             fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + e.message + "\r\n", function (err) {});
-        
-            page.close();
             return "raspagem indisponivel";
         }
     
-        page.close();
-        browser.close();
+        _page.close();
+        _browser.close();
     
-        return listaReclamacoes;   
+        return _listaReclamacoes;   
 
     }
 }
@@ -53,17 +50,16 @@ module.exports = {
 
 
 async function cargaInicialObterReclamacao() {
-    var urlPesquisa = "";
-    var urlAtual = page.url();
+    var urlAtual = _page.url();
     var re = /pagina=(\d+)/g;
     var myArray = urlAtual.match(re);
 
-    while (myArray[1] == pagina){
+    while (myArray[1] == _pagina){
         myArray = urlAtual.match(re);
         
         obterTextoReclamacoes();
-        pagina++
-        acessarSite(page, urlPesquisa, ".complain-list > li")
+        _pagina++
+        acessarSite(_page, _site.format(_busca, _pagina),".complain-list > li")
     } 
 }      
 
@@ -74,37 +70,36 @@ async function obterTextoReclamacoes() {
     var titulo = "";
     var conteudo = "";
     var reclamacao = {};
-    pageReclamacao = {};
+    _pageReclamacao = {};
 
-    listaReclamacoes = await page.$$('.complain-list > li');
-        
+    _listaReclamacoes = await _page.$$('.complain-list > li');        
 
-    for (var i = 0; i < listaReclamacoes.length; i++) {
-        urlReclamcao = await listaReclamacoes[i].$eval('a', el => el.href);
+    for (var i = 0; i < _listaReclamacoes.length; i++) {
+        _pageReclamacao = await _browser.newPage();  
+        urlReclamcao = await _listaReclamacoes[i].$eval('a', el => el.href);
 
-        acessarSite(pageReclamacao, urlReclamcao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
+        acessarSite(_pageReclamacao, urlReclamcao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
 
         try{
         
                 titulo = "";
-                elementTitulo = await pageReclamacao.$('.complain-head > .row > .col-md-10 .col-sm-12 > h1');
-                titulo = await pageReclamacao.evaluate(el => el.textContent, elementTitulo);
+                elementTitulo = await _pageReclamacao.$('.complain-head > .row > .col-md-10 .col-sm-12 > h1');
+                titulo = await _pageReclamacao.evaluate(el => el.textContent, elementTitulo);
 
                 conteudo = "";
-                elementConteudo = await pageReclamacao.$('.complain-body > p');
-                conteudo = await pageReclamacao.evaluate(el => el.textContent, elementConteudo);
+                elementConteudo = await _pageReclamacao.$('.complain-body > p');
+                conteudo = await _pageReclamacao.evaluate(el => el.textContent, elementConteudo);
 
                 reclamacao.titulo = titulo;
                 reclamacao.conteudo = conteudo;
-                listaReclamacoes.push(reclamacao);
-                pageReclamacao.close();
+                _listaReclamacoes.push(reclamacao);
+                _pageReclamacao.close();
 
         } catch (e) {
-                today = util.getDate();
+                today = _util.getDate();
                 fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + "erro no método obterTextoReclamacoes. URL: " + urlReclamcao + "\r\n" + e.message + "\r\n", function (err) {});
     
-                pageReclamacao.close();
-                page.close();
+                _pageReclamacao.close();
                 return "raspagem indisponivel";
         }
     }   
@@ -113,21 +108,17 @@ async function obterTextoReclamacoes() {
 
 }
 
-async function acessarSite(page, url, selector) {   
+async function acessarSite(page, site, selector) {   
     try{ 
-            pageReclamacao= await browser.newPage();
-            urlPesquisa = _site.format(busca, pagina);
-
-            await util.sleep(Math.floor(Math.random() * 3000) + 1000);
+            await _util.sleep(Math.floor(Math.random() * 3000) + 1000);
     
-            await util.tryConnection(page, url, selector, 3);
+            await _util.tryConnection(page, site, selector, 3);
 
     } catch (e) {
-            today = util.getDate();
-            fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + "erro no método acessarSite. URL: " + urlPesquisa + "\r\n" + e.message + "\r\n", function (err) {});
+            today = _util.getDate();
+            fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + "erro no método acessarSite. URL: " + site + "\r\n" + e.message + "\r\n", function (err) {});
 
-            pageReclamacao.close();
             page.close();
-            return "raspagem indisponivel";
+            throw e;
     }
 }
