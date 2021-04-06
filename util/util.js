@@ -27,7 +27,7 @@ module.exports = {
 
         while(tentativas > 0){
             try {
-                shell.exec('sudo sh /home/georgevepo/Desktop/hma vpn/hma-connect.sh');
+                shell.exec('sudo sh /home/georgevepo/Desktop/PPMercadoOnline-BigData-main/conn/hma-connect.sh');
                 await new Promise(resolve => setTimeout(resolve, 30000));
                 
                 await page.goto(url, {
