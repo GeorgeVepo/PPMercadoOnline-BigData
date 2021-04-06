@@ -11,18 +11,18 @@ var cargaInicial = true;
 async function executarMonitoramento(cargaInicial) {
 	fs.appendFile(__dirname + '//Log.txt', "\r\n" + util.getDate() + "\r\nMonitoramento executado\r\n", function (err) {});
 		
-	reclameAqui.ExecutarMonitoramento(urls.ObterURLUberEats, __dirname, cargaInicial)
-	.then(async function(retorno)  {		
+	reclameAqui.ExecutarMonitoramento(urls.ObterURLUberEats(), __dirname, cargaInicial)
+	.then(async function(retorno)  {	 	
 		return db.insertMany(retorno).then(async function()  {
-			return reclameAqui.ExecutarMonitoramento(urls.ObterURLIFood, __dirname, cargaInicial);
+			return reclameAqui.ExecutarMonitoramento(urls.ObterURLIFood(), __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
 		return db.insertMany(retorno).then(async function()  {
-			return reclameAqui.ExecutarMonitoramento(urls.ObterURLRappi, __dirname, cargaInicial);
+			return reclameAqui.ExecutarMonitoramento(urls.ObterURLRappi(), __dirname, cargaInicial);
 		});		 		
 	}).then(async function(retorno)  {	
 		return db.insertMany(retorno).then(async function()  {
-			return reclameAqui.ExecutarMonitoramento(urls.ObterURLJamesDelivery, __dirname, cargaInicial);
+			return reclameAqui.ExecutarMonitoramento(urls.ObterURLJamesDelivery(), __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
 		return db.insertMany(retorno);	
