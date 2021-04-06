@@ -1,7 +1,9 @@
 var __dirname = "";
+var fs = require("fs");
 var _puppeteer = require('puppeteer');
 var _util = require('../util/util.js');
 var _pagina = 1;
+var _today = "";
 var _busca = "Supermercado";
 var _page = {};
 var _browser = {};
@@ -33,8 +35,8 @@ module.exports = {
             }                    
              
         } catch (e) {
-            today = _util.getDate();
-            fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + e.message + "\r\n", function (err) {});
+            _today = _util.getDate();
+            fs.appendFile(__dirname + '//Log.txt', "\r\n" + _today + "\r\n" + e.message + "\r\n", function (err) {});
             return "raspagem indisponivel";
         }
     
@@ -64,7 +66,7 @@ async function cargaInicialObterReclamacao() {
 }      
 
 async function obterTextoReclamacoes() {      
-    var urlReclamcao = "";
+    var urlReclamacao = "";
     var elementTitulo = {};
     var elementConteudo = {};
     var titulo = "";
@@ -76,9 +78,9 @@ async function obterTextoReclamacoes() {
 
     for (var i = 0; i < _listaReclamacoes.length; i++) {
         _pageReclamacao = await _browser.newPage();  
-        urlReclamcao = await _listaReclamacoes[i].$eval('a', el => el.href);
+        urlReclamacao = await _listaReclamacoes[i].$eval('a', el => el.href);
 
-        acessarSite(_pageReclamacao, urlReclamcao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
+        acessarSite(_pageReclamacao, urlReclamacao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
 
         try{
         
@@ -96,8 +98,8 @@ async function obterTextoReclamacoes() {
                 _pageReclamacao.close();
 
         } catch (e) {
-                today = _util.getDate();
-                fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + "erro no método obterTextoReclamacoes. URL: " + urlReclamcao + "\r\n" + e.message + "\r\n", function (err) {});
+                _today = _util.getDate();
+                fs.appendFile(__dirname + '//Log.txt', "\r\n" + _today + "\r\n" + "erro no método obterTextoReclamacoes. URL: " + urlReclamacao + "\r\n" + e.message + "\r\n", function (err) {});
     
                 _pageReclamacao.close();
                 return "raspagem indisponivel";
@@ -115,8 +117,8 @@ async function acessarSite(page, site, selector) {
             await _util.tryConnection(page, site, selector, 3);
 
     } catch (e) {
-            today = _util.getDate();
-            fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + "erro no método acessarSite. URL: " + site + "\r\n" + e.message + "\r\n", function (err) {});
+            _today = _util.getDate();
+            fs.appendFile(__dirname + '//Log.txt', "\r\n" + _today + "\r\n" + "erro no método acessarSite. URL: " + site + "\r\n" + e.message + "\r\n", function (err) {});
 
             page.close();
             throw e;

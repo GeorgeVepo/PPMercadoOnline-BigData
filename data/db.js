@@ -7,8 +7,8 @@ function findAll() {
         return global.conn.collection("reclamacoes").find().toArray();
 }
             
-function insertAll(reclamacoes) {
-    return global.conn.collection("reclamacoes").insertAll(reclamacoes);
+function insertMany(reclamacoes) {
+    return global.conn.collection("reclamacoes").insertMany(reclamacoes);
 }
 
-module.exports = { findAll, insertAll }
+module.exports = { findAll, insertMany }

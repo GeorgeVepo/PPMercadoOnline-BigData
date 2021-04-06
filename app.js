@@ -11,22 +11,27 @@ var cargaInicial = true;
 async function executarMonitoramento(cargaInicial) {
 	fs.appendFile(__dirname + '//Log.txt', "\r\n" + util.getDate() + "\r\nMonitoramento executado\r\n", function (err) {});
 	
+	try{
 	reclameAqui.ExecutarMonitoramento(urls.ObterURLUberEats, __dirname, cargaInicial)
 	.then(async function(retorno)  {		
-		return db.insertAll(retorno).then(async function()  {
+		return db.insertMany(retorno).then(async function()  {
 			return reclameAqui.ExecutarMonitoramento(urls.ObterURLIFood, __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
-		return db.insertAll(retorno).then(async function()  {
+		return db.insertMany(retorno).then(async function()  {
 			return reclameAqui.ExecutarMonitoramento(urls.ObterURLRappi, __dirname, cargaInicial);
 		});		 		
 	}).then(async function(retorno)  {	
-		return db.insertAll(retorno).then(async function()  {
+		return db.insertMany(retorno).then(async function()  {
 			return reclameAqui.ExecutarMonitoramento(urls.ObterURLJamesDelivery, __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
-		return db.insertAll(retorno);	
+		return db.insertMany(retorno);	
 	});
+} catch (e) {
+	var today = util.getDate();
+	fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + e.message + "\r\n", function (err) {});
+}
 }
 
 const http = require('http');
@@ -42,6 +47,7 @@ const server = http.createServer((req, res) => {
 server.listen(port, hostname, () => {
   console.log(util.getDate() + ` - Server running at http://${hostname}:${port}/`);
   
+  executarMonitoramento(cargaInicial).then(function () {
   setInterval(async function () {
 	killChrome().then(async function () {
 		executarMonitoramento(cargaInicial).then(function () {
@@ -50,5 +56,5 @@ server.listen(port, hostname, () => {
 		});	
 	});			
 	}, 86400000);	
-
+});	
 });
