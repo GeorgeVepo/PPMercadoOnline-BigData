@@ -2,6 +2,7 @@ var __dirname = "";
 var fs = require("fs");
 var _puppeteer = require('puppeteer');
 var _util = require('../util/util.js');
+String.prototype.format = util.format;
 var _pagina = 1;
 var _today = "";
 var _busca = "Supermercado";
@@ -25,7 +26,7 @@ module.exports = {
         _page = await _browser.newPage();        
     
         try {    
-            acessarSite(_page, _util.format(_site, _busca, _pagina), ".complain-list > li");
+            acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
     
             if(cargaInicial){
                 cargaInicialObterReclamacao();
@@ -63,7 +64,7 @@ async function cargaInicialObterReclamacao() {
         
         obterTextoReclamacoes();
         _pagina++
-        acessarSite(_page, _util.format(_site, _busca, _pagina),".complain-list > li")
+        acessarSite(_page, _site.format(_busca, _pagina),".complain-list > li")
     } 
 }      
 
