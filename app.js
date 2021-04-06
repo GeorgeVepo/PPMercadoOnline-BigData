@@ -10,8 +10,7 @@ var cargaInicial = true;
 
 async function executarMonitoramento(cargaInicial) {
 	fs.appendFile(__dirname + '//Log.txt', "\r\n" + util.getDate() + "\r\nMonitoramento executado\r\n", function (err) {});
-	
-	try{
+		
 	reclameAqui.ExecutarMonitoramento(urls.ObterURLUberEats, __dirname, cargaInicial)
 	.then(async function(retorno)  {		
 		return db.insertMany(retorno).then(async function()  {
@@ -28,10 +27,6 @@ async function executarMonitoramento(cargaInicial) {
 	}).then(async function(retorno)  {
 		return db.insertMany(retorno);	
 	});
-} catch (e) {
-	var today = util.getDate();
-	fs.appendFile(__dirname + '//Log.txt', "\r\n" + today + "\r\n" + e.message + "\r\n", function (err) {});
-}
 }
 
 const http = require('http');

@@ -14,6 +14,8 @@ var _site = "";
 //module exports para oder usar em outras partes
 module.exports = {
     ExecutarMonitoramento: async function (site, dirname, cargaInicial) {
+        
+        fs.appendFile(__dirname + '//Log.txt', "ExecutarMonitoramento", function (err) {});
         __dirname = dirname;
         _site = site;
         
@@ -24,7 +26,6 @@ module.exports = {
         _page = await _browser.newPage();        
     
         try {    
-
             acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
     
             if(cargaInicial){
@@ -52,6 +53,8 @@ module.exports = {
 
 
 async function cargaInicialObterReclamacao() {
+    
+    fs.appendFile(__dirname + '//Log.txt', "cargaInicialObterReclamacao", function (err) {});
     var urlAtual = _page.url();
     var re = /pagina=(\d+)/g;
     var myArray = urlAtual.match(re);
@@ -112,6 +115,8 @@ async function obterTextoReclamacoes() {
 
 async function acessarSite(page, site, selector) {   
     try{ 
+        fs.appendFile(__dirname + '//Log.txt', "acessarSite", function (err) {});
+
             await _util.sleep(Math.floor(Math.random() * 3000) + 1000);
     
             await _util.tryConnection(page, site, selector, 3);
