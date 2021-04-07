@@ -1,4 +1,7 @@
-var shell = require('shelljs');
+var _today = "";
+//var __dirname = "/home/georgevepo/Desktop/PPMercadoOnline-BigData-main";
+var __dirname = "C:/Users/george.melo.vepo/Desktop/Work/PPMercadoOnline-BigData";
+var _fs = require("fs");
 
 module.exports = {
     format: function () {
@@ -27,16 +30,20 @@ module.exports = {
 
         while(tentativas > 0){
             try {
-                shell.exec('sudo sh /home/georgevepo/Desktop/PPMercadoOnline-BigData-main/conn/hma-connect.sh');
                 await new Promise(resolve => setTimeout(resolve, 30000));
                 
                 await page.goto(url, {
                     timeout: 20000
                 });
 
+                
+                this.gerarLog("goto " + url);
+
                 await page.waitForSelector(selector, {
                     timeout: 20000
                 })
+
+                this.gerarLog("waitForSelector " + selector);
 
                 break;                
             } catch (e) {   
@@ -47,11 +54,11 @@ module.exports = {
             }                            
         }            
     },
-    disconnectToVPN: async function(){
-        //shell.exec('echo 9424 | sudo -S killall openvpn');
-        //cmd.run('taskkill /s localhost  /u Administrador /p 9424367mtp  /f /im "HMA! Pro VPN.exe"');
-        //cmd.run('net stop "OpenVPNService"');
-        //return await new Promise(resolve => setTimeout(resolve, 10000)); 
+    gerarLog: async function (message) {  
+        _today = this.getDate(); 
+        console.log("\r\n" + _today + "\r\n" + message + "\r\n");
+        _fs.appendFile(__dirname + '//log.txt', "\r\n" + _today + "\r\n" + message + "\r\n", function (err) {});
+    
     }
 
 }

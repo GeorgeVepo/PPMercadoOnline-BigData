@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "kill-chrome": "^2.2.0",
-    "mongodb": "^3.6.5",
+    "mongodb": "^3.6.6",
     "node-rest-client": "^3.1.0",
     "puppeteer": "^1.11.0",
     "shelljs": "^0.8.4"

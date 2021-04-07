@@ -1,15 +1,12 @@
-var __dirname = "";
 var _puppeteer = require('puppeteer');
 var _util = require('../util/util.js');
 var _pagina = 1;
-var _today = "";
 var _busca = "Supermercado";
 var _page = {};
 var _browser = {};
 var _listaReclamacoes = [];
 var _pageReclamacao = {};
 var _site = "";
-var fs = require("fs");
 String.prototype.format = _util.format;
 
 //module exports para oder usar em outras partes
@@ -19,13 +16,14 @@ module.exports = {
      
         _site = site;
         
-        _browser = await _puppeteer.launch({
+        
+        _browser = await _puppeteer.launch({            
             headless: false
-        });  
-    
+        });      
+                
         _page = await _browser.newPage();        
     
-        try {    
+        try {     
             await acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
     
             if(cargaInicial){
@@ -36,8 +34,7 @@ module.exports = {
             }                    
              
         } catch (e) {
-            _today = _util.getDate();
-            fs.appendFile(__dirname + '//log.txt', "\r\n" + _today + "\r\n" + e.message + "\r\n", function (err) {});
+            _util.gerarLog(e.message);
             return "raspagem indisponivel";
         }
     
@@ -101,9 +98,7 @@ async function obterTextoReclamacoes() {
                 _pageReclamacao.close();
 
         } catch (e) {
-                _today = _util.getDate();
-                fs.appendFile(__dirname + '//log.txt', "\r\n" + _today + "\r\n" + "erro no método obterTextoReclamacoes. URL: " + urlReclamacao + "\r\n" + e.message + "\r\n", function (err) {});
-    
+                _util.gerarLog("erro no método obterTextoReclamacoes. URL: " + urlReclamacao + "\r\n" + e.message);    
                 _pageReclamacao.close();
                 return "raspagem indisponivel";
         }
@@ -119,11 +114,10 @@ async function acessarSite(page, site, selector) {
     
             await _util.tryConnection(page, site, selector, 3);
 
-    } catch (e) {
-            _today = _util.getDate();
-            fs.appendFile(__dirname + '//log.txt', "\r\n" + _today + "\r\n" + "erro no método acessarSite. URL: " + site + "\r\n" + e.message + "\r\n", function (err) {});
-
+    } catch (e) {         
+            _util.gerarLog("erro no método acessarSite. URL: " + urlReclamacao + "\r\n" + e.message);    
             page.close();
-            throw e;
     }
 }
+
+
