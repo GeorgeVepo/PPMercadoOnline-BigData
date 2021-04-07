@@ -52,7 +52,9 @@ module.exports = {
                     throw e;
                 }                    
             }                            
-        }            
+        }
+        
+        return page;
     },
     gerarLog: async function (message) {  
         _today = this.getDate(); 
