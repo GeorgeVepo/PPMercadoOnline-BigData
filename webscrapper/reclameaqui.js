@@ -24,13 +24,13 @@ module.exports = {
         _page = await _browser.newPage();        
     
         try {     
-            _page = await acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
+            await acessarSite(_page, _site.format(_busca, _pagina), ".complain-list > li");
     
             if(cargaInicial){
-                cargaInicialObterReclamacao();
+                await cargaInicialObterReclamacao();
     
             } else{
-                obterTextoReclamacoes();
+                await obterTextoReclamacoes();
             }                    
              
         } catch (e) {
@@ -55,11 +55,11 @@ async function cargaInicialObterReclamacao() {
     var myArray = re.exec(urlAtual);
 
     while (myArray[1] == _pagina){
-        myArray = urlAtual.match(re);
-        
-        obterTextoReclamacoes();
+        myArray = urlAtual.match(re);        
+
+        await obterTextoReclamacoes();
         _pagina++
-        _page = await acessarSite(_page, _site.format(_busca, _pagina),".complain-list > li")
+        await acessarSite(_page, _site.format(_busca, _pagina),".complain-list > li")
     } 
 }      
 
@@ -72,13 +72,14 @@ async function obterTextoReclamacoes() {
     var reclamacao = {};
     _pageReclamacao = {};
 
-    _listaReclamacoes = await _page.$$('.complain-list > li');        
+
+    _listaReclamacoes = await _page.$$('.complain-list > li');  
 
     for (var i = 0; i < _listaReclamacoes.length; i++) {
         _pageReclamacao = await _browser.newPage();  
         urlReclamacao = await _listaReclamacoes[i].$eval('a', el => el.href);
 
-        _pageReclamacao = await acessarSite(_pageReclamacao, urlReclamacao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
+        await acessarSite(_pageReclamacao, urlReclamacao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
 
         try{
         
@@ -110,14 +111,12 @@ async function acessarSite(page, site, selector) {
     try{ 
             await _util.sleep(Math.floor(Math.random() * 3000) + 1000);
     
-            page = await _util.tryConnection(page, site, selector, 3);
+            await _util.tryConnection(page, site, selector, 3);
 
     } catch (e) {         
-            _util.gerarLog("erro no método acessarSite. URL: " + urlReclamacao + "\r\n" + e.message);    
+            _util.gerarLog("erro no método acessarSite. URL: " + site + "\r\n" + e.message);    
             page.close();
     }
 
-    return page;
 }
-
 
