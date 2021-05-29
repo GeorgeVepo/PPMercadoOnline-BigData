@@ -33,14 +33,14 @@ module.exports = {
                 await new Promise(resolve => setTimeout(resolve, 30000));
                 
                 await page.goto(url, {
-                    timeout: 20000
+                    timeout: 300000
                 });
 
                 
                 this.gerarLog("goto " + url);
 
                 await page.waitForSelector(selector, {
-                    timeout: 20000
+                    timeout: 300000
                 })
 
                 this.gerarLog("waitForSelector " + selector);

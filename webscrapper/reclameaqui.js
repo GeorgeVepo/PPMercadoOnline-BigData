@@ -4,6 +4,7 @@ var _pagina = 1;
 var _busca = "Supermercado";
 var _page = {};
 var _browser = {};
+var _listaURLReclamacoes = [];
 var _listaReclamacoes = [];
 var _pageReclamacao = {};
 var _site = "";
@@ -54,12 +55,12 @@ async function cargaInicialObterReclamacao() {
     var re = /pagina=(\d+)/;
     var myArray = re.exec(urlAtual);
 
-    while (myArray[1] == _pagina){
-        myArray = urlAtual.match(re);        
-
+    while (myArray[1] == _pagina){        
         await obterTextoReclamacoes();
         _pagina++
         await acessarSite(_page, _site.format(_busca, _pagina),".complain-list > li")
+        urlAtual = _page.url();
+        myArray = urlAtual.match(re);  
     } 
 }      
 
@@ -71,23 +72,28 @@ async function obterTextoReclamacoes() {
     var conteudo = "";
     var reclamacao = {};
     _pageReclamacao = {};
+    
+    _listaURLReclamacoes = [];
+    _listaURLReclamacoes = await _page.$$('.complain-list > li'); 
+    
+    var quantidadeReclamacoes = Math.trunc(_listaURLReclamacoes.length / 2);
 
-
-    _listaReclamacoes = await _page.$$('.complain-list > li');  
-
-    for (var i = 0; i < _listaReclamacoes.length; i++) {
-        _pageReclamacao = await _browser.newPage();  
-        urlReclamacao = await _listaReclamacoes[i].$eval('a', el => el.href);
-
-        await acessarSite(_pageReclamacao, urlReclamacao, '.complain-head > .row > .col-md-10 .col-sm-12 > h1');
+    for (var i = 0; i < quantidadeReclamacoes; i++) {
+        _pageReclamacao = await _browser.newPage(); 
 
         try{
+                reclamacao = {};
+                urlReclamacao = await _listaURLReclamacoes[i].$eval('a', el => el.href);
+
+                await acessarSite(_pageReclamacao, urlReclamacao, '.complain-head > .row > .col-md-10.col-sm-12 > h1');
         
                 titulo = "";
-                elementTitulo = await _pageReclamacao.$('.complain-head > .row > .col-md-10 .col-sm-12 > h1');
+                elementTitulo = null;
+                elementTitulo = await _pageReclamacao.$('.complain-head > .row > .col-md-10.col-sm-12 > h1');
                 titulo = await _pageReclamacao.evaluate(el => el.textContent, elementTitulo);
 
                 conteudo = "";
+                elementConteudo = null;
                 elementConteudo = await _pageReclamacao.$('.complain-body > p');
                 conteudo = await _pageReclamacao.evaluate(el => el.textContent, elementConteudo);
 

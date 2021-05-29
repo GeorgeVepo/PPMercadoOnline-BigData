@@ -8,21 +8,26 @@ var _cargaInicial = true;
 
 async function executarMonitoramento(cargaInicial) {
 	_util.gerarLog("Monitoramento executado");
+	var list = [];
 	
 	_reclameAqui.ExecutarMonitoramento(_urls.ObterURLUberEats(), __dirname, cargaInicial)
 	.then(async function(retorno)  {	 	
 		return _db.insertMany(retorno).then(async function()  {
+			list.push(await _db.findAll());
 			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLIFood(), __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
 		return _db.insertMany(retorno).then(async function()  {
+			list.push(await _db.findAll());
 			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLRappi(), __dirname, cargaInicial);
 		});		 		
 	}).then(async function(retorno)  {	
 		return _db.insertMany(retorno).then(async function()  {
+			list.push(await _db.findAll());
 			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLJamesDelivery(), __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
+		list.push(await _db.findAll());
 		return _db.insertMany(retorno);	
 	});
 }
@@ -30,7 +35,7 @@ async function executarMonitoramento(cargaInicial) {
 const http = require('http');
 
 const hostname = '127.0.0.1';
-const port = 8080;
+const port = 8085;
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;

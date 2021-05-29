@@ -11,4 +11,9 @@ function insertMany(reclamacoes) {
     return global.conn.collection("reclamacoes").insertMany(reclamacoes);
 }
 
-module.exports = { findAll, insertMany }
+
+function deleteAll() {
+    return global.conn.collection("reclamacoes").deleteMany( { } );;
+}
+
+module.exports = { findAll, insertMany, deleteAll }
