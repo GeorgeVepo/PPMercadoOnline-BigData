@@ -8,8 +8,7 @@ var _cargaInicial = true;
 
 async function executarMonitoramento(cargaInicial) {
 	_util.gerarLog("Monitoramento executado");
-	var list = [];
-	
+
 	_reclameAqui.ExecutarMonitoramento(_urls.ObterURLUberEats(), __dirname, cargaInicial)
 	.then(async function(retorno)  {	 	
 		return _db.insertMany(retorno).then(async function()  {
