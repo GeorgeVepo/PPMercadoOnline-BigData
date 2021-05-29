@@ -13,21 +13,17 @@ async function executarMonitoramento(cargaInicial) {
 	_reclameAqui.ExecutarMonitoramento(_urls.ObterURLUberEats(), __dirname, cargaInicial)
 	.then(async function(retorno)  {	 	
 		return _db.insertMany(retorno).then(async function()  {
-			list.push(await _db.findAll());
 			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLIFood(), __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
 		return _db.insertMany(retorno).then(async function()  {
-			list.push(await _db.findAll());
 			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLRappi(), __dirname, cargaInicial);
 		});		 		
 	}).then(async function(retorno)  {	
 		return _db.insertMany(retorno).then(async function()  {
-			list.push(await _db.findAll());
 			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLJamesDelivery(), __dirname, cargaInicial);
 		});		 
 	}).then(async function(retorno)  {
-		list.push(await _db.findAll());
 		return _db.insertMany(retorno);	
 	});
 }
