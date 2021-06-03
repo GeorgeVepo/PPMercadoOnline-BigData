@@ -30,17 +30,17 @@ module.exports = {
 
         while(tentativas > 0){
             try {
-                await new Promise(resolve => setTimeout(resolve, 30000));
+                await new Promise(resolve => setTimeout(resolve, 5000));
                 
                 await page.goto(url, {
-                    timeout: 300000
+                    timeout: 120000
                 });
 
                 
                 this.gerarLog("goto " + url);
 
                 await page.waitForSelector(selector, {
-                    timeout: 300000
+                    timeout: 120000
                 })
 
                 this.gerarLog("waitForSelector " + selector);
@@ -50,7 +50,7 @@ module.exports = {
                 tentativas -= 1;
                 if(tentativas <= 0){
                     throw e;
-                }                    
+                }      
             }                            
         }        
     },

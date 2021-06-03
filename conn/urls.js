@@ -1,6 +1,6 @@
 module.exports = {
     ObterURLUberEats: function () {
-        return "https://www.reclameaqui.com.br/empresa/cornershop/lista-reclamacoes/?pagina={1}";
+        return "https://www.reclameaqui.com.br/empresa/cornershop/lista-reclamacoes/?busca=e&pagina={1}";
     },
     ObterURLIFood: function () {
         return "https://www.reclameaqui.com.br/empresa/ifood/lista-reclamacoes/?busca={0}&pagina={1}";

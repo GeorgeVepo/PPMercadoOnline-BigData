@@ -9,22 +9,18 @@ var _cargaInicial = true;
 async function executarMonitoramento(cargaInicial) {
 	_util.gerarLog("Monitoramento executado");
 
-	_reclameAqui.ExecutarMonitoramento(_urls.ObterURLUberEats(), __dirname, cargaInicial)
-	.then(async function(retorno)  {	 	
-		return _db.insertMany(retorno).then(async function()  {
-			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLIFood(), __dirname, cargaInicial);
-		});		 
-	}).then(async function(retorno)  {
-		return _db.insertMany(retorno).then(async function()  {
-			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLRappi(), __dirname, cargaInicial);
-		});		 		
-	}).then(async function(retorno)  {	
-		return _db.insertMany(retorno).then(async function()  {
-			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLJamesDelivery(), __dirname, cargaInicial);
-		});		 
-	}).then(async function(retorno)  {
-		return _db.insertMany(retorno);	
-	});
+	
+		await new Promise(resolve => setTimeout(resolve, 30000));
+		var list = await _db.findAll();		
+		_util.gerarLog("registros no banco" + "\r\n" + list.length);
+		_reclameAqui.ExecutarMonitoramento(_urls.ObterURLIFood(), __dirname, cargaInicial, 1)
+		.then(async function()  {	
+				return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLRappi(), __dirname, cargaInicial, 1);	 		
+		}).then(async function()  {	
+			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLJamesDelivery(), __dirname, cargaInicial, 1);	 
+		}); 
+
+	
 }
 
 const http = require('http');
