@@ -2,7 +2,7 @@ var _puppeteer = require('puppeteer');
 var _util = require('../util/util.js');
 var _db = require('../data/db.js');
 var _pagina = 1;
-var _busca = "Supermercado";
+var _busca = "mercado";
 var _page = {};
 var _browser = {};
 var _listaURLReclamacoes = [];
@@ -113,8 +113,10 @@ async function obterTextoReclamacoes() {
     var urlReclamacao = "";
     var elementTitulo = {};
     var elementConteudo = {};
+    var elementCategoria = {};
     var titulo = "";
     var conteudo = "";
+    var categoria = "";
     var reclamacao = {};
     _pageReclamacao = {};
     
@@ -142,8 +144,19 @@ async function obterTextoReclamacoes() {
                 elementConteudo = await _pageReclamacao.$('.complain-body > p');
                 conteudo = await _pageReclamacao.evaluate(el => el.textContent, elementConteudo);
 
+                categoria = "";
+                elementCategoria = null;
+                elementCategoria = await _pageReclamacao.$('.tags.list-inline > li > a');
+                
+                if(!elementCategoria){
+                    categoria = "nenhum";
+                } else{
+                    categoria = await _pageReclamacao.evaluate(el => el.textContent, elementCategoria);
+                }
+
                 reclamacao.titulo = titulo;
                 reclamacao.conteudo = conteudo;
+                reclamacao.categoria = categoria;
                 _listaReclamacoes.push(reclamacao);
                 _pageReclamacao.close();
 

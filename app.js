@@ -10,15 +10,17 @@ async function executarMonitoramento(cargaInicial) {
 	_util.gerarLog("Monitoramento executado");
 
 	
-		await new Promise(resolve => setTimeout(resolve, 30000));
-		var list = await _db.findAll();		
+		await new Promise(resolve => setTimeout(resolve, 30000));	
+		var list = await _db.findAll();	
 		_util.gerarLog("registros no banco" + "\r\n" + list.length);
-		_reclameAqui.ExecutarMonitoramento(_urls.ObterURLIFood(), __dirname, cargaInicial, 1)
+		_reclameAqui.ExecutarMonitoramento(_urls.ObterURLUberEats(), __dirname, cargaInicial, 1000)
 		.then(async function()  {	
-				return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLRappi(), __dirname, cargaInicial, 1);	 		
+			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLIFood(), __dirname, cargaInicial, 10000);	 		
+		}).then(async function()  {	
+			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLRappi(), __dirname, cargaInicial, 578);	 		
 		}).then(async function()  {	
 			return _reclameAqui.ExecutarMonitoramento(_urls.ObterURLJamesDelivery(), __dirname, cargaInicial, 1);	 
-		}); 
+	}); 
 
 	
 }
